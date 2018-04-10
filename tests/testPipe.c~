@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+#include "pipe.h"
+
+int main(int argc, char* argv[]) {
+    printf("FM White Fluid Mechanics Example 6.9:\n Oil, with rho = 950 and mu = 0.019, flows through a D = 0.30 L = 100 pipe with dP = 74480.  The roughness ratio e/D = 0.0002.  Find the average velocity and flow rate.\n\n");
+    
+    return 0;
+}
