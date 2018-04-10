@@ -14,8 +14,6 @@
 // (indicated in the accompanying comment) that has been defined by
 // the user to be NaN or negative, the function will return NaN and
 // issue a warning note in stdout.
-//
-// The results of these functions are valid for Re > 2.0e3
 
 #ifndef PIPE_H
 #define PIPE_H
@@ -29,7 +27,7 @@ typedef struct {
     double L; // Pipe length [m]
     double D; // Pipe diameter [m]
     double e; // Pipe roughness [m]
-    fluid fluid; // Viscosity, density, and temperature of the fluid
+    fluid_t fluid; // Viscosity, density, and temperature of the fluid
     double Re; // Reynolds number [-]
     double dP; // Pressure drop in the pipe [Pa]
     double g; // Gravitational acceleration [m s^-2]

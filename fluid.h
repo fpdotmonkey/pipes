@@ -18,14 +18,14 @@ typedef struct {
     double mu; // Dynamic viscosity [Pa s]
     double rho; // Density [kg m^-3]
     double T; // Temperature [degC]
-} fluid;
+} fluid_t;
 
 // Returns a fluid at temperature T, uses properties of fluidType.  If
 // fluid type is not known to this program, mu and rho will be set to
-// -1.
+// NaN.
 //
 // Currently available fluidType [temperature range]:
 //   water [0-100degC]
-fluid initFluid(char* fluidType, double T);
+fluid_t initFluid(char* fluidType, double T);
 
 #endif

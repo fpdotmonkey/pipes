@@ -6,14 +6,24 @@
 
 #include "pipe.h"
 
+#define MIN_RE 2.0e3
+
 // Calculates the friction factor of a pipe
 static double frictionFactor(double Re, double eD) {
-    // Friction factor calculated with (6.49) in FM White Fluid Mechanics
-    double f = 1.63638/pow(log(0.23404 * pow(eD, 1.11) + 6.9/Re), 2);
+    double f;
+    
+    if (Re > MIN_RE) {
+        // Friction factor calculated with (6.49) in FM White Fluid Mechanics
+        f = 1.63638/pow(log(0.23404 * pow(eD, 1.11) + 6.9/Re), 2);
+    } else {
+        // (6.13) in FM White Fluid Mechanics
+        f = 64 / Re;
+    }
     return f;
 }
 
-// Given D, L, fluid, Re, and g calculate dP
+// Given pipe.Re, pipe.e, pipe.D, pipe.L, pipe.fluid.mu, and
+// pipe.fluid.rho calculates pipe.dP
 double pipePressureLoss(pipe_t pipe) {
 
     if (pipe.Re > 0 && pipe.e > 0 && pipe.D > 0 && pipe.L > 0
@@ -31,7 +41,8 @@ double pipePressureLoss(pipe_t pipe) {
     }
 }
 
-// Given, D, L, dP, fluid, and g, calculate flow rate [m^3 s^-1]
+// Given pipe.e, pipe.D, pipe.L, pipe.fluid.mu, and pipe.fluid.rho
+// calculates flow rate Q [m^3 s^-1]
 double pipeFlowRate(pipe_t pipe) {
     if (pipe.e > 0 && pipe.D > 0 && pipe.L > 0
         && pipe.fluid.mu > 0 && pipe.fluid.rho > 0) {
@@ -56,7 +67,7 @@ double pipeFlowRate(pipe_t pipe) {
 
         // Flow rate [m^3 s^-1]
         double Q = Re * M_PI/4 * pipe.D * pipe.fluid.mu / pipe.fluid.rho;
-    
+
         return Q;
     } else {
         printf("pipeFlowRate() WARNING pipe.e, pipe.D, pipe.L, pipe.fluid.mu, and pipe.fluid.rho must all be defined to be positive doubles, otherwise output will be NaN\n");
@@ -65,9 +76,10 @@ double pipeFlowRate(pipe_t pipe) {
     }
 }
 
-// Given Q, L, dP, fluid and g, calculate D
+// Given Q, pipe.e, pipe.L, pipe.fluid.mu, and pipe.fluid.rho
+// calculates pipe.D
 double pipeDiameter(pipe_t pipe, double Q) {
-    if (pipe.e > 0 && pipe.L > 0
+    if (Q > 0 && pipe.e > 0 && pipe.L > 0
         && pipe.fluid.mu > 0 && pipe.fluid.rho > 0) {
         const double convergenceLimit = 0.0001; // Arbitrary difference between
                                                 // one friction factor and the
@@ -89,15 +101,15 @@ double pipeDiameter(pipe_t pipe, double Q) {
 
         return D;
     } else {
-        printf("pipeDiameter() WARNING pipe.e, pipe.L, pipe.fluid.mu, and pipe.fluid.rho must all be defined to be positive doubles, otherwise output will be NaN\n");
+        printf("pipeDiameter() WARNING Q, pipe.e, pipe.L, pipe.fluid.mu, and pipe.fluid.rho must all be defined to be positive doubles, otherwise output will be NaN\n");
 
         return NAN;
     }
 }
 
-// Given Re, D, dP, fluid, and g, calculate L
+// Given Q, pipe.e, pipe.D, pipe.fluid.mu, and pipe.fluid.rho calculates L
 double pipeLength(pipe_t pipe, double Q) {
-    if (pipe.e > 0 && pipe.D
+    if (Q > 0 && pipe.e > 0 && pipe.D
         && pipe.fluid.mu > 0 && pipe.fluid.rho > 0) {
         double Re = 4 * Q * pipe.fluid.rho / (M_PI * pipe.fluid.mu * pipe.D);
         double f = frictionFactor(Re, pipe.e / pipe.D);
@@ -107,7 +119,7 @@ double pipeLength(pipe_t pipe, double Q) {
         
         return L;
     } else {
-        printf("pipeDiameter() WARNING pipe.e, pipe.D, pipe.fluid.mu, and pipe.fluid.rho must all be defined to be positive doubles, otherwise output will be NaN\n");
+        printf("pipeLength() WARNING Q, pipe.e, pipe.D, pipe.fluid.mu, and pipe.fluid.rho must all be defined to be positive doubles, otherwise output will be NaN\n");
         
         return NAN;
     }

@@ -15,7 +15,7 @@ static double getViscosity(char* fluidType, double T) {
         mu = 1.788e-3 * exp(-1.704 - 1448.5/(T+273.15)
                             + 521927/(T+273.15)/(T+273.15));
     } else {
-        mu = -1;
+        mu = NAN;
     }
     
     return mu;
@@ -27,13 +27,13 @@ static double getDensity(char* fluidType, double T) {
         // According to FM White, Fluid Mechanics, Table A1 
         rho = 1000 - 0.0178 * pow(fabs(T - 4), 1.7);
     } else {
-        rho = -1;
+        rho = NAN;
     }
     return rho;
 }
 
-fluid initFluid(char* fluidType, double T) {
-    fluid fluid;
+fluid_t initFluid(char* fluidType, double T) {
+    fluid_t fluid;
     
     fluid.fluidType = fluidType;
     fluid.mu = getViscosity(fluidType, T);
