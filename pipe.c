@@ -7,6 +7,9 @@
 #include "pipe.h"
 
 #define MIN_RE 2.0e3
+#define CONVERGENCE_LIMIT 0.0001  // Arbitrary difference between one
+                                  // friction factor and the next that
+                                  // is iterated
 
 // Calculates the friction factor of a pipe
 static double frictionFactor(double Re, double eD) {
@@ -46,9 +49,6 @@ double pipePressureLoss(pipe_t pipe) {
 double pipeFlowRate(pipe_t pipe) {
     if (pipe.e > 0 && pipe.D > 0 && pipe.L > 0
         && pipe.fluid.mu > 0 && pipe.fluid.rho > 0) {
-        const double convergenceLimit = 0.0001; // Arbitrary difference between
-                                                // one friction factor and the
-                                                // next that is iterated
 
         double Re = 4.0e3; // Initially fully rough flow is assumed,
                            // corresponding to this Reynolds number
@@ -57,8 +57,8 @@ double pipeFlowRate(pipe_t pipe) {
         double fold = INFINITY; // Selected so convergence doesn't happen on the
                                 // first iteration by chance
     
-        while (fabs(f - fold) > convergenceLimit) { // This is known to converge
-                                                    // quickly (~5 iterations)
+        while (fabs(f - fold) > CONVERGENCE_LIMIT) { // This will converge
+                                                     // quickly (~5 iterations)
             fold = f;
             f = frictionFactor(Re, pipe.e / pipe.D);
             Re = pow(2 * pipe.dP * pow(pipe.D, 3) * pipe.fluid.rho
@@ -81,17 +81,14 @@ double pipeFlowRate(pipe_t pipe) {
 double pipeDiameter(pipe_t pipe, double Q) {
     if (Q > 0 && pipe.e > 0 && pipe.L > 0
         && pipe.fluid.mu > 0 && pipe.fluid.rho > 0) {
-        const double convergenceLimit = 0.0001; // Arbitrary difference between
-                                                // one friction factor and the
-                                                // next that is iterated
     
         double f = 0.03; // An arbitrary initial guess for f
         double fnew = INFINITY; // Selected so convergence doesn't happen on the
                                 // first iteration by chance
         double D;
         
-        while (fabs(f - fnew) > convergenceLimit) { // This is known to converge
-                                                    // quickly (~5 iterations)
+        while (fabs(f - fnew) > CONVERGENCE_LIMIT) { // This will converge
+                                                     // quickly (~5 iterations)
             fnew = f;
             D = pow(8 * f * pipe.L * Q*Q * pipe.fluid.rho
                     / (M_PI*M_PI * pipe.dP), 0.2);
