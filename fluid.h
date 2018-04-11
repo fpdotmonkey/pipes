@@ -25,13 +25,13 @@ typedef struct {
     double T; // Temperature [degC]
 } fluid_t;
 
-// Returns a fluid at temperature T, uses properties of fluidType.  If
+// Returns a fluid at temperature T, uses properties based on fluidType.  If
 // fluid type is not known to this program, mu and rho will be set to
 // NaN.
 //
 // Currently available fluidType [temperature range]:
 //   WATER [0-100degC]
-//   OTHER [-] (Note: results in mu = rho = NaN
+//   OTHER [-] (Note: results in mu = rho = NaN)
 fluid_t initFluid(fluidType fluid, double T);
 
 #endif
