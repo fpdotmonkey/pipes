@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
     // FM White Fluid Mechanics Example 6.6
     //
     
-    fluid_t water = initFluid("water", 20);
+    fluid_t water = initFluid(WATER, 20);
     pipe_t pipe66 = { 60, 0.15, 0.12e-3, water, NAN, NAN, 9.81 };
     double V66 = 2; // m s^-1
     
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     // FM White Fluid Mechanics 6.9
     //
     
-    fluid_t oil = { "oil", 0.019, 950, NAN };
+    fluid_t oil = { OTHER, 0.019, 950, NAN };
     pipe_t pipe69 = { 100, 0.30, 6.0e-5, oil, NAN, 74556, 9.81 };
     
     printf("FM White Fluid Mechanics Example 6.9:\nOil, with rho = %f kg m^-3 and mu = %f Pa s, flows through a D = %f m L = %f m pipe with dP = %f Pa.  The roughness ratio e/D = %f.  Find the average velocity and flow rate.\n\n", pipe69.fluid.rho, pipe69.fluid.mu, pipe69.D, pipe69.L, pipe69.dP, pipe69.e/pipe69.D);
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     // Does pipe.h break properly?
     //
 
-    fluid_t NaNfluid = initFluid("!@#$", NAN);
+    fluid_t NaNfluid = initFluid(OTHER, NAN);
     pipe_t NaNpipe = { NAN, NAN, NAN, NaNfluid, NAN, NAN, NAN };
     double NaNQ = NAN;
 

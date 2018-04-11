@@ -13,8 +13,13 @@
 #include <string.h>
 #include <math.h>
 
+typedef enum {
+    WATER,
+    OTHER
+} fluidType;
+
 typedef struct {
-    char* fluidType;
+    fluidType fluid;
     double mu; // Dynamic viscosity [Pa s]
     double rho; // Density [kg m^-3]
     double T; // Temperature [degC]
@@ -25,7 +30,8 @@ typedef struct {
 // NaN.
 //
 // Currently available fluidType [temperature range]:
-//   water [0-100degC]
-fluid_t initFluid(char* fluidType, double T);
+//   WATER [0-100degC]
+//   OTHER [-] (Note: results in mu = rho = NaN
+fluid_t initFluid(fluidType fluid, double T);
 
 #endif

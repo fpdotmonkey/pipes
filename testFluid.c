@@ -7,8 +7,8 @@ int main(int argc, char* argv[]) {
     fluid water20;
     fluid ammonia50;
 
-    water20 = initFluid("water", 20.0);
-    ammonia50 = initFluid("ammonia", 50.0);
+    water20 = initFluid(WATER, 20.0);
+    ammonia50 = initFluid(OTHER, 50.0);
 
     printf("Expected values, FM White Fluid Mechanics Table A1\nName\tmu\t\trho\t\tT\n%s\t%f\t%f\t%f\n%s\t%f\t%f\t%f\n",
            "water", 1.003e-3, 998.0, 20.0,
